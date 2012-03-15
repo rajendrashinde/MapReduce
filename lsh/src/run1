@@ -1,0 +1,18 @@
+echo "Parameters:"
+cat Parameters.java
+iter=1
+n=10k
+q=10k
+k=10
+L=50
+c=2
+d=50
+scheme="h"
+output="output_${scheme}_k${k}_L${L}_c${c}_d${d}_n${n}_q${q}"
+#output="output_${scheme}_W0.5_k10_L100_d100_u0.6_c2.0_D1.0_n1000_nq1000_d100"
+#output=output_h_W0.5_k10_L50_d100_u0.6_c2.0_D1.0_n1000000_nq500000_d100
+echo $output
+hadoop fs -rmr $output
+/usr/local/hadoop-0.20.2/bin/hadoop jar ./lsh.jar lsh.LSH_${scheme} -Xmx300m 64 input $output
+#hadoop fs -copyToLocal $output /data/ashish-students/hdfsoutputs/
+#hadoop fs -rmr $output

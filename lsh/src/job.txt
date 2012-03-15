@@ -1,0 +1,25 @@
+- Counter Group: Job Counters  (org.apache.hadoop.mapred.JobInProgress$Counter)
+  number of counters in this group: 4
+  - Launched reduce tasks: 84
+  - Rack-local map tasks: 73
+  - Launched map tasks: 155
+  - Data-local map tasks: 82
+- Counter Group: FileSystemCounters (FileSystemCounters)
+  number of counters in this group: 4
+  - FILE_BYTES_READ: 880649350
+  - HDFS_BYTES_READ: 534250075
+  - FILE_BYTES_WRITTEN: 1761547028
+  - HDFS_BYTES_WRITTEN: 32937955
+- Counter Group: Map-Reduce Framework (org.apache.hadoop.mapred.Task$Counter)
+  number of counters in this group: 11
+  - Reduce input groups: 41
+  - Combine output records: 0
+  - Map input records: 1200000
+  - Reduce shuffle bytes: 863410684
+  - Reduce output records: 281400
+  - Spilled Records: 3709124
+  - Map output bytes: 873230718
+  - Map input bytes: 533953626
+  - Combine input records: 0
+  - Map output records: 1854562
+  - Reduce input records: 1854562

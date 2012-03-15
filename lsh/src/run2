@@ -1,0 +1,9 @@
+./compile
+output_h=output_tiny_n_h
+output_g=output_tiny_n_g
+echo $output_h
+hadoop fs -rmr $output_h
+/usr/local/hadoop-0.20.2/bin/hadoop jar ./lsh.jar lsh.LSH_h -Xmx512m 64 tiny_n_64 $output_h
+echo $output_g
+hadoop fs -rmr $output_g
+/usr/local/hadoop-0.20.2/bin/hadoop jar ./lsh.jar lsh.LSH_g -Xmx512m 64 tiny_n_64 $output_g

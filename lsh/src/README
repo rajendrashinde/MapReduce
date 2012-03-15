@@ -1,0 +1,42 @@
+****
+src9 Implementing Secondary Sort in order to remove the requirement of storing query points in a queue..
+
+Now the Key is the Gbucket + 'data' or 'query'. 
+Added the custom Grouping Comparator class [in order to group by the first field of the Key]
+Retaining the default Sorting Comparator class [Assuming the key '9 data' precedes '9 query' in the default sorting order]
+Added the custom Partitioner [Partition according to the first field of the key]
+
+
+*****
+src8 for all pairs similarity search [no longer distinguishes between data and query points]
+
+src7 added the LSH_h_lb and LSH_g_lb classes [They have the same mapper as LSH_h and LSH_g respectively] where Reducer implements load balance [just counts the number of data and query points]
+
+
+src6 solves a (minor) bug in src5:
+query_container is now a hash table with id's as keys and vectors as values.
+In src5: it was the other way around, the vectors were keys and ids were values. This was a problem in the image data set since some queries were the exact same vectors, and were searched only once by the code. 
+[In fact, this should be how it should be implemented anyway (and keep a list of ids for each physical vectors. This will be done in future work. For now, the HashMap is keyed by ids, so that this problem does not occur (at the cost of doing some extra computation) ]
+
+
+Update in src5 over src3:
+	src5 is just a scripting version of src3.
+	It has the ability to run expts with multiple values of L using a singlecmd
+
+
+Update in src3 over src2:
+	Simplified lsh.LSH_h.Reduce.reduce()
+		Earlier it used to contain a hash table indexed by query called "query_buckets" and values, the buckets that need to be searched for in order to answer the corresponding query.
+		Note that this is not necessary in LSH_h since input to the reduce is the "H_bucket" corresponding to the data and query values included in the "value". 
+		Hence now, it just maintains a set(table) of queries (and their corr IDs) that need to be looked up in the bucket indicated by the key. 
+	Secondly realized that "break" in LSH_g cannot be replicated in H. 
+	Also removed Identity Reducer and Mapper implementations (these implementations have heavily been experimented with in src2 and one should refer to the original implementations in src
+
+Updates in src2 over src:
+Implementations of random_vector, nearest_neighbor now included in Math_functions.java
+-- All the necessary information required to compute these quantities passed. The function just does the calculations and returns the required result.
+
+Similarly implementations of hbucket, gbucket included now in LSH_functions.java
+-- All the necessary information required to compute these quantities passed. The function just does the calculations and returns the required result.
+
+So basically all repetition of code is eliminated in src2.

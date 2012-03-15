@@ -1,0 +1,5 @@
+G tiny_n_64 3.0 200
+  - Reduce shuffle bytes: 863410684
+Finished At: 29-Nov-2011 03:23:15 (12mins, 12sec)
+G 200 3.0
+107995

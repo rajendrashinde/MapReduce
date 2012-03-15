@@ -1,0 +1,2 @@
+hadoop fs -rmr ./output_g_6
+/usr/local/hadoop-0.20.2/bin/hadoop jar ~/lsh.jar lsh.LSH_g_lb myqueue 64 input output_g_6

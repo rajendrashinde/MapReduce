@@ -1,0 +1,5 @@
+rm ./lsh.jar
+rm -rf ./build
+mkdir ./build
+javac -classpath /usr/local/hadoop-0.20.2/hadoop-0.20.2-core.jar -d ./build/ *.java
+jar -cvf ./lsh.jar -C ./build/ .

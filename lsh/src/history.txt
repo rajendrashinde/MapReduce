@@ -1,0 +1,129 @@
+
+Hadoop job: job_201110312213_0434
+=====================================
+Job tracker host name: ilc0
+job tracker start time: Mon Oct 31 22:13:20 PDT 2011
+User: ashish-students
+JobName: G_L200_D3.0
+JobConf: hdfs://ilc0:54310/data/hadoop/tmp/mapred/system/job_201110312213_0434/job.xml
+Submitted At: 29-Nov-2011 03:11:01
+Launched At: 29-Nov-2011 03:11:02 (1sec)
+Finished At: 29-Nov-2011 03:23:15 (12mins, 12sec)
+Status: SUCCESS
+=====================================
+
+Task Summary
+============================
+Kind	Total	Successful	Failed	Killed	StartTime	FinishTime
+
+Setup	1	1		0	0	29-Nov-2011 01:51:48	29-Nov-2011 01:51:59 (11sec)
+Map	155	129		0	26	28-Nov-2011 22:16:31	29-Nov-2011 03:13:55 (4hrs, 57mins, 24sec)
+Reduce	83	64		0	19	28-Nov-2011 22:16:50	29-Nov-2011 03:16:47 (4hrs, 59mins, 57sec)
+Cleanup	1	1		0	0	28-Nov-2011 23:47:29	28-Nov-2011 23:47:34 (5sec)
+============================
+
+
+Analysis
+=========
+
+Time taken by best performing map task task_201110312213_0434_m_000127: 3sec
+Average time taken by map tasks: 21sec
+Worse performing map tasks: 
+TaskId		Timetaken
+task_201110312213_0434_m_000125 1mins, 15sec
+task_201110312213_0434_m_000114 1mins, 4sec
+task_201110312213_0434_m_000119 1mins, 3sec
+task_201110312213_0434_m_000124 1mins, 3sec
+task_201110312213_0434_m_000121 1mins, 3sec
+task_201110312213_0434_m_000123 1mins, 2sec
+task_201110312213_0434_m_000120 1mins, 2sec
+task_201110312213_0434_m_000126 1mins, 0sec
+task_201110312213_0434_m_000108 56sec
+task_201110312213_0434_m_000110 55sec
+The last map task task_201110312213_0434_m_000104 finished at (relative to the Job launch time): 29-Nov-2011 03:12:00 (57sec)
+
+Time taken by best performing shuffle task task_201110312213_0434_r_000032: 10sec
+Average time taken by shuffle tasks: 1mins, 12sec
+Worse performing shuffle tasks: 
+TaskId		Timetaken
+task_201110312213_0434_r_000005 1mins, 28sec
+task_201110312213_0434_r_000012 1mins, 28sec
+task_201110312213_0434_r_000004 1mins, 28sec
+task_201110312213_0434_r_000006 1mins, 28sec
+task_201110312213_0434_r_000009 1mins, 28sec
+task_201110312213_0434_r_000001 1mins, 27sec
+task_201110312213_0434_r_000008 1mins, 27sec
+task_201110312213_0434_r_000013 1mins, 27sec
+task_201110312213_0434_r_000002 1mins, 27sec
+task_201110312213_0434_r_000007 1mins, 27sec
+The last shuffle task task_201110312213_0434_r_000045 finished at (relative to the Job launch time): 29-Nov-2011 03:12:54 (1mins, 51sec)
+
+Time taken by best performing reduce task task_201110312213_0434_r_000061: 1mins, 24sec
+Average time taken by reduce tasks: 2mins, 30sec
+Worse performing reduce tasks: 
+TaskId		Timetaken
+task_201110312213_0434_r_000022 8mins, 40sec
+task_201110312213_0434_r_000023 8mins, 10sec
+task_201110312213_0434_r_000024 7mins, 50sec
+task_201110312213_0434_r_000021 7mins, 45sec
+task_201110312213_0434_r_000032 7mins, 30sec
+task_201110312213_0434_r_000020 7mins, 7sec
+task_201110312213_0434_r_000033 6mins, 19sec
+task_201110312213_0434_r_000019 5mins, 24sec
+task_201110312213_0434_r_000018 4mins, 19sec
+task_201110312213_0434_r_000034 3mins, 40sec
+The last reduce task task_201110312213_0434_r_000045 finished at (relative to the Job launch time): 29-Nov-2011 03:14:44 (3mins, 41sec)
+=========
+
+FAILED SETUP task list for job_201110312213_0434
+TaskId		StartTime	FinishTime	Error
+====================================================
+
+KILLED SETUP task list for job_201110312213_0434
+TaskId		StartTime	FinishTime	Error
+====================================================
+
+FAILED MAP task list for job_201110312213_0434
+TaskId		StartTime	FinishTime	Error	InputSplits
+====================================================
+
+KILLED MAP task list for job_201110312213_0434
+TaskId		StartTime	FinishTime	Error	InputSplits
+====================================================
+
+FAILED REDUCE task list for job_201110312213_0434
+TaskId		StartTime	FinishTime	Error
+====================================================
+
+KILLED REDUCE task list for job_201110312213_0434
+TaskId		StartTime	FinishTime	Error
+====================================================
+
+FAILED CLEANUP task list for job_201110312213_0434
+TaskId		StartTime	FinishTime	Error
+====================================================
+
+KILLED CLEANUP task list for job_201110312213_0434
+TaskId		StartTime	FinishTime	Error
+====================================================
+
+KILLED task attempts by nodes
+Hostname	FailedTasks
+===============================
+ilc5.stanford.edu	task_201110312213_0434_m_000105, task_201110312213_0434_m_000116, task_201110312213_0434_m_000121, task_201110312213_0434_r_000033, 
+ilc17.stanford.edu	task_201110312213_0434_m_000118, 
+ilc15.stanford.edu	task_201110312213_0434_r_000015, 
+ilc9.stanford.edu	task_201110312213_0434_m_000103, task_201110312213_0434_m_000119, task_201110312213_0434_r_000019, 
+ilc20.Stanford.EDU	task_201110312213_0434_r_000021, task_201110312213_0434_r_000032, 
+ilc11.stanford.edu	task_201110312213_0434_r_000020, 
+ilc13.stanford.edu	task_201110312213_0434_m_000109, task_201110312213_0434_m_000115, task_201110312213_0434_r_000017, 
+ilc7.stanford.edu	task_201110312213_0434_m_000107, task_201110312213_0434_r_000038, 
+ilc3.stanford.edu	task_201110312213_0434_m_000102, task_201110312213_0434_m_000120, 
+ilc18.stanford.edu	task_201110312213_0434_m_000125, task_201110312213_0434_r_000037, 
+ilc19.stanford.edu	task_201110312213_0434_m_000110, task_201110312213_0434_m_000117, task_201110312213_0434_r_000034, 
+ILC0.Stanford.EDU	task_201110312213_0434_m_000016, task_201110312213_0434_m_000025, task_201110312213_0434_m_000026, task_201110312213_0434_m_000027, task_201110312213_0434_r_000000, task_201110312213_0434_r_000029, task_201110312213_0434_r_000045, task_201110312213_0434_r_000060, 
+ilc1.stanford.edu	task_201110312213_0434_r_000035, 
+ilc4.stanford.edu	task_201110312213_0434_m_000108, task_201110312213_0434_r_000018, 
+ilc16.stanford.edu	task_201110312213_0434_m_000104, task_201110312213_0434_m_000114, task_201110312213_0434_m_000122, task_201110312213_0434_r_000022, 
+ilc6.stanford.edu	task_201110312213_0434_m_000111, task_201110312213_0434_m_000112, task_201110312213_0434_m_000113, 
+ilc14.stanford.edu	task_201110312213_0434_m_000106, task_201110312213_0434_r_000016, task_201110312213_0434_r_000024, 

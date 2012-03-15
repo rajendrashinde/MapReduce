@@ -1,0 +1,8 @@
+package lsh; 
+public class Parameters {
+	double W = 0.3; 
+	int k = 16; 
+	int d = 64; 
+	double u = 0.16; 
+	double c = 2.0; 
+	double D = 2.25; 
