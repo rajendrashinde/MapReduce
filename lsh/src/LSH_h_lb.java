@@ -49,10 +49,12 @@ public class LSH_h_lb extends LSH_h {
 				    
 				  //  System.out.println(h_bucket + " :" + result[1] + ": " + result[2]); 
 					if (point_type.equals("data")){
+						reporter.incrCounter(ReducerLoad.DATA, 1);
 						data_count += 1;
 					 }
 				    
 					if (point_type.equals("query")){
+						reporter.incrCounter(ReducerLoad.QUERY, 1);
 						query_count += 1; 
 					}
 				}

@@ -77,11 +77,20 @@ public class LSH_g extends Configured{
 			return super.compare(t1, t2);
 		}
 	}
-       
+
+	public static enum ReducerLoad {
+		DATA, QUERY	
+	};
+      	public static enum MapperLoad {
+		DATA, QUERY
+	};
+
+	 
 	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 
 		private Text g_bucket = new Text();
         	private Text value_out = new Text(); 
+		private	Random rnd = new Random(10042); 
 
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			Random Rng = new Random(0);
@@ -109,11 +118,13 @@ public class LSH_g extends Configured{
 			String point_type = result[1];
 			String point_ID = result[2];
 
-			Set<Integer> query_sample = Math_functions.randomSample(79302017,20000); 
-			Integer tmp = Integer.parseInt(point_ID); 
-		
-			if (!query_sample.contains(tmp)) {
+//			Set<Integer> query_sample = Math_functions.randomSample(79302017,20000); 
+//			Integer tmp = Integer.parseInt(point_ID); 
+
+			if ( rnd.nextFloat() < 0.8 ) {		
+//			if (!query_sample.contains(tmp)) {
 			//if ( point_type.equals("data")) {
+				reporter.incrCounter(MapperLoad.DATA, 1);
 				Vector point = new Vector(point_str);
 
 				//normalize if necessary!
@@ -126,6 +137,7 @@ public class LSH_g extends Configured{
 			}
 			else {
 				Vector query = new Vector(point_str);
+				reporter.incrCounter(MapperLoad.QUERY, 1);
 
 				//normalize if necessary!
                                 //query = query.normalize() ;
@@ -190,6 +202,7 @@ public class LSH_g extends Configured{
 
 			   	System.out.println(g_bucket + " : Data: " + data_count + ", Query: " + query_count); 
 				if (point_type.equals("data")){
+					reporter.incrCounter(ReducerLoad.DATA, 1);
 					data_count += 1;
 					Vector point = new Vector(point_str); 
 
@@ -214,6 +227,7 @@ public class LSH_g extends Configured{
 				 }
 			    
 				if (point_type.equals("query")){
+					reporter.incrCounter(ReducerLoad.QUERY, 1);
 					long t1 = System.currentTimeMillis(); 
 					query_count += 1;
 					String query_ID = point_ID; 
@@ -271,7 +285,7 @@ public class LSH_g extends Configured{
         conf.setMapperClass(lsh.LSH_g.Map.class);
 	conf.setPartitionerClass(FirstPartitioner.class);
 	conf.setOutputValueGroupingComparator(GroupComparator.class); 
-        conf.setReducerClass(lsh.LSH_g.Reduce.class);
+        //conf.setReducerClass(lsh.LSH_g.Reduce.class);
         conf.setInputFormat(TextInputFormat.class);
         conf.setOutputFormat(TextOutputFormat.class);
 

@@ -32,10 +32,19 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.RunningJob;
 import org.apache.hadoop.mapred.Counters;
 public class LSH_h {
+
+	public static enum ReducerLoad {
+		DATA, QUERY	
+	};
+      	public static enum MapperLoad {
+		DATA, QUERY
+	};
        
 	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 		private Text h_bucket = new Text();
 		private Text value_out = new Text ();
+		Random rnd = new Random(10042); 
+
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			Random Rng = new Random(0);
 			Parameters P = new Parameters ();
@@ -58,6 +67,9 @@ public class LSH_h {
 			String point_type = result[1];
 			String point_ID = result[2];
 			//if ( point_type.equals("data")) {
+
+			if ( rnd.nextFloat() < 0.8 ) {		
+				reporter.incrCounter(MapperLoad.DATA, 1);
 				Vector point = new Vector(point_str);
 
 				//normalize if necessary!
@@ -68,8 +80,9 @@ public class LSH_h {
 				value_out.set(point_str + ", data, " + point_ID);
 				output.collect(h_bucket,value_out);
 				//System.out.println(LSH_functions.hbucket(point) + " " + point_ID); 
-			//}
-			//else {
+			}
+			else {
+				reporter.incrCounter(MapperLoad.QUERY, 1);
 				Vector query = new Vector(point_str);
 
 				//normalize if necessary!
@@ -94,7 +107,7 @@ public class LSH_h {
 				      //  System.out.println(next.toString() + ": " + point_ID);
 				    }
 				}
-			//} 
+			} 
 
 		}
 	}
@@ -113,6 +126,7 @@ public class LSH_h {
 				    
 				  //  System.out.println(h_bucket + " :" + result[1] + ": " + result[2]); 
 					if (point_type.equals("data")){
+						reporter.incrCounter(ReducerLoad.DATA, 1);
 						String point_str = result[0];
 						String point_ID = result[2];
 						Vector point = new Vector(point_str); 
@@ -136,6 +150,7 @@ public class LSH_h {
 					 }
 				    
 					if (point_type.equals("query")){
+						reporter.incrCounter(ReducerLoad.QUERY, 1);
 						String query_str = result[0];
 						query_container.put(result[2], query_str);
 					}

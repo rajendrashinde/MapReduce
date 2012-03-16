@@ -40,29 +40,6 @@ public class LSH_g_lb extends LSH_g {
 	public static class Reduce extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
 
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException { 
-			/* 
-			Random Rng = new Random(0);
-			Parameters P = new Parameters (); 
-			double W = P.W; 
-			int k = P.k; 
-			int L = P.L; 
-			int d = P.d; 
-			double u = P.u; 
-			double c = P.c; 
-			double D = P.D; 
-			ArrayList<Vector> direction = new ArrayList<Vector> (); 
-			ArrayList<Double> shift = new ArrayList<Double> ();
-			for(int i = 0; i < k; i++){
-				direction.add (Math_functions.random_vector(Rng, d, 0.0, 1.0));
-				shift.add (W*Rng.nextDouble());
-			} 
-			Random Rng_G = new Random(1000);
-			Vector direction2 = Math_functions.random_vector(Rng_G, k, 0.0, 1.0);
-			double shift2 = D*Rng_G.nextDouble();
-			HashMap<String, ArrayList<Vector_ID>> lsh_table = new HashMap<String, ArrayList<Vector_ID>> ();
-			HashMap<String, String> query_container = new HashMap<String, String> (); 
-		
-			String g_bucket = key.toString(); */	
 			int data_count = 0; int query_count = 0;
 			while (values.hasNext()) {
 				String line = values.next().toString();
@@ -72,10 +49,12 @@ public class LSH_g_lb extends LSH_g {
 				String point_ID = result[2];
 
 				if (point_type.equals("data")){
+					reporter.incrCounter(ReducerLoad.DATA, 1); 
 					data_count += 1;
 				 }
 			    
 				if (point_type.equals("query")){
+					reporter.incrCounter(ReducerLoad.QUERY, 1); 
 					query_count += 1;
 				}
 			}
