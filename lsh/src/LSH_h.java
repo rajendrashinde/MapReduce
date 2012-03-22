@@ -32,12 +32,12 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.RunningJob;
 import org.apache.hadoop.mapred.Counters;
 public class LSH_h {
+      	public static enum MapperLoad {
+		DATA, QUERY, FANOUT
+	};
 
 	public static enum ReducerLoad {
 		DATA, QUERY	
-	};
-      	public static enum MapperLoad {
-		DATA, QUERY
 	};
        
 	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
@@ -102,6 +102,7 @@ public class LSH_h {
 				if (!f.isEmpty()){ 
 				    while (it.hasNext()){
 					Text next  = it.next(); 
+					reporter.incrCounter(MapperLoad.FANOUT, 1); 
 					value_out.set(point_str + ", query, " + point_ID); 
 					output.collect(next, value_out);
 				      //  System.out.println(next.toString() + ": " + point_ID);

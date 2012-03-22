@@ -77,12 +77,12 @@ public class LSH_g extends Configured{
 			return super.compare(t1, t2);
 		}
 	}
+      	public static enum MapperLoad {
+		DATA, QUERY, FANOUT
+	};
 
 	public static enum ReducerLoad {
 		DATA, QUERY	
-	};
-      	public static enum MapperLoad {
-		DATA, QUERY
 	};
 
 	 
@@ -157,6 +157,7 @@ public class LSH_g extends Configured{
 					Text next  = it.next(); 
 					value_out.set(point_str + ", query, " + point_ID); 
 					output.collect(next, value_out);
+					reporter.incrCounter(MapperLoad.FANOUT, 1); 
 				      //  System.out.println(next.toString() + ": " + point_ID);
 				    }
 				}
@@ -226,7 +227,7 @@ public class LSH_g extends Configured{
     
 				 }
 			    
-				if (point_type.equals("query")){
+				if (point_type.equals("query") && data_count > 0 ){
 					reporter.incrCounter(ReducerLoad.QUERY, 1);
 					long t1 = System.currentTimeMillis(); 
 					query_count += 1;
@@ -285,7 +286,7 @@ public class LSH_g extends Configured{
         conf.setMapperClass(lsh.LSH_g.Map.class);
 	conf.setPartitionerClass(FirstPartitioner.class);
 	conf.setOutputValueGroupingComparator(GroupComparator.class); 
-        //conf.setReducerClass(lsh.LSH_g.Reduce.class);
+        conf.setReducerClass(lsh.LSH_g.Reduce.class);
         conf.setInputFormat(TextInputFormat.class);
         conf.setOutputFormat(TextOutputFormat.class);
 
