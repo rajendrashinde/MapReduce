@@ -30,11 +30,11 @@ for line in sys.stdin:
 		last_key = key
 		df = 1
 		tf = {}
-		tf[doc] = int(count)
+		tf[doc] = float(count)
 	else:
 		df += 1
 		last_key = key
-		tf[doc] = int(count)
+		tf[doc] = float(count)
 if last_key:
 		for doc in tf:
 			count = tf[doc]

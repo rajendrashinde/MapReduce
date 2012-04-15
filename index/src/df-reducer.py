@@ -1,28 +1,41 @@
 #!/usr/bin/env python
 
 import sys
+import math
 
 last_key = None
-last_val = None
-count = 0
+df = 0
+tf = {}
+# For each word(key), tf is a hash map which stores tf for each document 
+# So keys of tf represent the different documents containing the current word
+
 for line in sys.stdin:
-	(key, val) = line.strip().split('\t',2)
-	if last_key and last_key != key: 
-		""" This is not the first word and 
-		you have detected a word boundary """
-		print "%s\t%s" % (last_key, count)
-		last_key = key
-		last_val = val
-		count = 1
-	else: 
-		""" This is either the first word 
-		or you are not at a word boundary """
-		last_key = key
-		if last_val and last_val != val:
-			count += 1
-		else: # This is the first word and first document
-			last_val = val
-			count = 1
-		
-if last_key:
-	print "%s\t%s" % (last_key, count)
+        key_val = line.strip().split('\t',2)
+        if len(key_val) != 2:
+                continue
+        (key, val) = key_val
+        # Note: key is a word here, val is a doc@-@count string
+
+        word_count = val.split('@-@', 2)
+        if len(word_count) != 2:
+                continue
+        (word, count) = word_count
+
+        if last_key and last_key != key:
+                for word_it in tf:
+                        tf_count = tf[word_it]
+                        word_doc = "%s@-@%s" %(word_it, last_key)
+                        print "%s\t%f" % (word_doc, float(tf_count)/float(df))
+                last_key = key
+                df = int(count)
+                tf = {}
+                tf[word] = int(count)
+        else:  
+                df += int(count)
+                last_key = key
+                tf[word] = int(count)
+if last_key:   
+                for word in tf:
+                        tf_count = tf[word]
+                        word_doc = "%s@-@%s" % (word, last_key)
+                        print "%s\t%f" % (word_doc, float(tf_count)/float(df) )

@@ -4,14 +4,14 @@ import sys
 import math
 
 for line in sys.stdin:
-        word_doc_count = line.strip().split('\t', 2)
-        if len(word_doc_count) != 2:
+        word_doc_tfidf = line.strip().split('\t', 2)
+        if len(word_doc_tfidf) != 2:
                 continue
-        (word_doc, count) = word_doc_count
+        (word_doc, tfidf) = word_doc_tfidf
 
         word_doc = word_doc.split('@-@')
         if len(word_doc) != 2:
                 continue
         (word, doc) = word_doc
 
-        print '%s\t%s@-@%s' % (doc, word, count)
+        print '%s\t%s@-@%s' % (doc, word, tfidf)
