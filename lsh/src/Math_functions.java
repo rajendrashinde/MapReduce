@@ -39,6 +39,65 @@ public class Math_functions {
 		}
 	return NN;
 	}
+	
+	public static String[] nearest_neighbor(String query_str, String query_ID, ArrayList<String> candidates, double u, int d) {
+		double distance = 1000.0; 
+		Iterator <String> it = candidates.iterator(); 
+		String[] NN = {"1000","-1"};
+ 
+		while (it.hasNext()) {
+			String[] junk = it.next().split(":");
+ 			String candidate_str = junk[0]; 
+			String candidate_ID = junk[1]; 
+ 
+			distance = cosine_distance(query_str, candidate_str); 
+			 
+			if (distance < u && !query_ID.equals(candidate_ID)) {	
+				NN[0] = Double.toString(distance);	
+				NN[1] = candidate_ID;  
+				break;
+			}
+		}
+		
+	return NN;
+	}
+	
+	public static Double cosine_distance(String u, String v){
+			double dot = 0.0; 
+			HashMap<Integer, String> u_comp = new HashMap<Integer, String>();
+			double u_norm = 0.0; 
+			String[] u_list = u.split(" "); 
+			for (int i = 0; i < u_list.length; i++) {
+				String[] junk = u_list[i].split(","); 
+				if (junk.length == 2){
+				u_comp.put(Integer.parseInt(junk[0]), junk[1]); 
+				u_norm += Math.pow(Float.valueOf(junk[1].trim()),2);
+				}
+			}
+			u_norm = Math.sqrt(u_norm); 
+			
+			double v_norm = 0.0; 
+			HashMap<Integer, String> v_comp = new HashMap<Integer, String>(); 
+			String[] v_list = v.split(" ");
+			for (int i = 0; i < v_list.length; i++){
+				String[] junk = v_list[i].trim().split(",");
+				if (junk.length == 2) {
+					v_comp.put(Integer.parseInt(junk[0]), junk[1]); 
+					v_norm += Math.pow(Float.valueOf(junk[1].trim()),2);
+				}
+			}
+			v_norm = Math.sqrt(v_norm);
+			
+			Iterator<Integer> it_ucomp = u_comp.keySet().iterator();
+			while (it_ucomp.hasNext()){
+				int dir = it_ucomp.next(); 
+				if (v_comp.containsKey(dir)) {
+					dot += Float.valueOf(u_comp.get(dir).trim())*Float.valueOf(v_comp.get(dir).trim()); 
+				}
+			}
+			
+			return 1.0 - dot/(u_norm*v_norm);		
+	}
 
 	public static Vector random_vector(Random Rng, int d, double mu, double sigma) {
 		double junk[] = new double[d]; 

@@ -31,6 +31,20 @@ public class Vector {
             this.data[i] = new Float(junk[i]);
     }
     
+	public Vector(String point_str, String mode, int d) {
+		String[] junk = point_str.split(" ");
+		this.N = d;
+		this.data = new double[this.N];
+		for (int i = 0; i < junk.length; i++) {
+			String[] dir_value = junk[i].split(","); 
+			if (dir_value.length == 2){
+				int dir = Integer.parseInt(dir_value[0]);
+				this.data[dir] = new Float(dir_value[1]);
+				}
+		//	else
+		//	  System.out.println("split empty: "+ junk[i]);
+		} 
+	}
      
     public double dot(Vector that) {
         if (this.N != that.N) throw new RuntimeException("Dimensions don't agree");
@@ -85,4 +99,8 @@ public class Vector {
         }
     return s + ")";
     }
+
+	public int dimension(){
+		return this.N;
+	}
 }
