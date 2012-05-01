@@ -1,4 +1,5 @@
 #/usr/bin/python
+# This computes the stats (min, max, avg) of the number of data and query points seen by each reducer.
 import sys
 infinity = 10000000000
 t_min = [infinity, infinity]
