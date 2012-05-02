@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+sys.path.append(".")
 
 from PorterStemmer import PorterStemmer
 
