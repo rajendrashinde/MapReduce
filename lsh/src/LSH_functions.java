@@ -14,7 +14,7 @@ import java.lang.Math;
 public class LSH_functions {
 	
 	static String mode = "L2"; 
-	static boolean debug = true;
+	static boolean debug = false;
 	
 	public static String hbucket(Vector s, ArrayList<Vector> direction, ArrayList<Double> shift, int k, double W) {
 		String bucket = "";
@@ -57,7 +57,7 @@ public class LSH_functions {
 		
 		for (int i = 0; i < k; i++) {
 			Iterator <Integer> it_j = s.data.keySet().iterator(); 
-			double shift = W*Rng.nextDouble();
+			
 			double dot = 0.0; 
 			while (it_j.hasNext()) {
 				int j = it_j.next(); 
@@ -67,6 +67,7 @@ public class LSH_functions {
 			
 			if (s.norm > 0)
 				dot = dot/s.norm;  //Normalization of input vector
+			double shift = W*Rng.nextDouble();
 			dot += shift; 
 			
 			if (mode.equals("L2")) { 

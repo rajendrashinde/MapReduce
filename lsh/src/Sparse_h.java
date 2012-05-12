@@ -31,7 +31,7 @@ import org.apache.hadoop.conf.Configuration;
 
 import org.apache.hadoop.mapred.RunningJob;
 import org.apache.hadoop.mapred.Counters;
-public class Sparse_h extends CustomPartitionerSecondarySort {
+public class Sparse_h {
 
 	public static enum MapperLoad {
 		DATA, QUERY, FANOUT, PERTURB
@@ -75,7 +75,7 @@ public class Sparse_h extends CustomPartitionerSecondarySort {
 				Vector_sparse point = new Vector_sparse(point_str, d);
 
 				
-				h_bucket.set(LSH_functions.hbucket(point, k, W)[0] + " data");
+				h_bucket.set(LSH_functions.hbucket(point, k, W)[0]);
 				if (debug)
 					value_out.set("data; " + point_ID);
 				else
@@ -105,7 +105,7 @@ public class Sparse_h extends CustomPartitionerSecondarySort {
 				if (!f.isEmpty()){ 
 				    while (it.hasNext()){
 						
-						key_out.set(it.next() + " query");
+						key_out.set(it.next());
 						reporter.incrCounter(MapperLoad.FANOUT, 1); 						
 						output.collect(key_out, value_out);
 				      	//  System.out.println(next.toString() + ": " + point_ID);
@@ -127,8 +127,7 @@ public class Sparse_h extends CustomPartitionerSecondarySort {
 			      //HashMap<String, HashSet<String>> query_buckets = new HashMap<String, HashSet<String>> ();
 			      HashMap<String, String> query_container = new HashMap<String, String> (); 
 				
-				String key_array[] = key.toString().split(" ");
-				String h_bucket = key_array[0];
+				String h_bucket = key.toString();
 			
 				Parameters P = new Parameters (); double u = P.u; int d = P.d;
 				
@@ -262,6 +261,7 @@ public class Sparse_h extends CustomPartitionerSecondarySort {
         conf.setOutputKeyClass(Text.class);
         conf.setOutputValueClass(Text.class);
         conf.setMapperClass(lsh.Sparse_h.Map.class);
+		
         if(!debug) 
 			conf.setReducerClass(lsh.Sparse_h.Reduce.class);
         conf.setInputFormat(TextInputFormat.class);

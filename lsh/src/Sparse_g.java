@@ -41,7 +41,7 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
 		DATA, QUERY_MAX, QUERY	
 	};
 	
-	static boolean debug = true;
+	static boolean debug = false;
   
 	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 		private Text h_bucket = new Text();
@@ -99,6 +99,14 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
 				Vector_sparse query = new Vector_sparse(point_str, d);
 
 				Set<String> f = LSH_functions.GetOffsetBuckets(query, k, L, W);				 
+				Iterator<String> it = f.iterator();
+				
+				Set<String> f_g = new HashSet<String> (); 
+				if(!f.isEmpty()) {
+					while(it.hasNext()) {
+						f_g.add(LSH_functions.gbucket(it.next(), direction2, shift2, D));
+					}
+				}
 
 				if (debug)
 					value_out.set("query; " + point_ID);
@@ -106,11 +114,11 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
 					value_out.set(point_str + "; query; " + point_ID);
 
 				Text key_out  = new Text(); 				
-				Iterator<String> it = f.iterator();
-				if (!f.isEmpty()){ 
-				    while (it.hasNext()){
+				Iterator<String> it_g = f_g.iterator();
+				if (!f_g.isEmpty()){ 
+				    while (it_g.hasNext()){
 						
-						key_out.set(LSH_functions.gbucket(it.next(), direction2, shift2, D) + " query");
+						key_out.set(it_g.next() + " query");
 						reporter.incrCounter(MapperLoad.FANOUT, 1); 						
 						output.collect(key_out, value_out);
 				      	//  System.out.println(next.toString() + ": " + point_ID);
@@ -270,6 +278,9 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
         conf.setOutputKeyClass(Text.class);
         conf.setOutputValueClass(Text.class);
         conf.setMapperClass(lsh.Sparse_g.Map.class);
+		conf.setPartitionerClass(lsh.Sparse_g.FirstPartitioner.class);
+		conf.setOutputValueGroupingComparator(lsh.Sparse_g.GroupComparator.class);
+		
         if(!debug) 
 			conf.setReducerClass(lsh.Sparse_g.Reduce.class);
         conf.setInputFormat(TextInputFormat.class);
