@@ -13,7 +13,9 @@ import java.lang.Math;
 
 public class LSH_functions {
 	
-	static boolean debug = false;
+	static String mode = "L2"; 
+	static boolean debug = true;
+	
 	public static String hbucket(Vector s, ArrayList<Vector> direction, ArrayList<Double> shift, int k, double W) {
 		String bucket = "";
 		for (int i = 0; i < k; i++) {
@@ -52,12 +54,11 @@ public class LSH_functions {
 		Random Rng = new Random();
 		String[] out = {"", ""}; 
 		String x = "";  
-		String mode = "L2"; 
+		
 		for (int i = 0; i < k; i++) {
 			Iterator <Integer> it_j = s.data.keySet().iterator(); 
-			Rng.setSeed(i); 
 			double shift = W*Rng.nextDouble();
-			double dot = shift; 
+			double dot = 0.0; 
 			while (it_j.hasNext()) {
 				int j = it_j.next(); 
 				Rng.setSeed(7919*i+j);
@@ -66,6 +67,7 @@ public class LSH_functions {
 			
 			if (s.norm > 0)
 				dot = dot/s.norm;  //Normalization of input vector
+			dot += shift; 
 			
 			if (mode.equals("L2")) { 
 				int id = (int) Math.floor(dot/W);
@@ -84,6 +86,12 @@ public class LSH_functions {
 					id = 1; 
 				else
 					id = 0; 
+				bucket += Integer.toString(id);
+				x += String.valueOf(Math.abs(dot)); 
+				if (i < k - 1) {
+					bucket += " ";
+					x += " ";
+				}
 			   //x does not make sense in this case.
 			}
 			              
@@ -130,22 +138,30 @@ public class LSH_functions {
 		String hbucket = hbucket_x[0];
 		String x_str = hbucket_x[1];
 		out.add(hbucket);
-		 
-		String [] hbucket_split = hbucket.trim().split(" "); 
-		 
-		String [] x_split = x_str.trim().split(" "); 
-		final Float [] x = new Float[2*k]; 
-		int [] hbucket_int = new int[k]; 
 		
+		if (debug) System.out.println(hbucket); 
+		String [] hbucket_split = hbucket.trim().split(" ");  
+		String [] x_split = x_str.trim().split(" "); 
+		
+		int m; 
+		if (mode.equals("cosine"))
+			m = 1;
+		else 
+			m = 2; 
+		
+		final Float [] x = new Float[m*k]; 
+		int [] hbucket_int = new int[k]; 
+			
 		for (int i = 0; i < k; i++){
 			hbucket_int[i] = (int)Integer.parseInt(hbucket_split[i]); 
-			x[i] = Float.parseFloat(x_split[i]); 
-			x[k+i] = (float)W - x[i]; 
+			x[i] = Float.parseFloat(x_split[i]);
+			if (mode.equals("L2")) 
+				x[k+i] = (float)W - x[i]; 
 		}
 		
 		// MYSORT: Sort according to x values. 
-		final Integer[] sorted_order = new Integer[2*k];
-		for (int i = 0; i < 2*k; i++) sorted_order[i] = i;		
+		final Integer[] sorted_order = new Integer[m*k];
+		for (int i = 0; i < m*k; i++) sorted_order[i] = i;		
 		
 		Arrays.sort(sorted_order, new Comparator<Integer> () {
 			@Override public int compare(final Integer o1, final Integer o2) {
@@ -161,8 +177,9 @@ public class LSH_functions {
 		if (debug) H.print(); 
 		
 		for (int i = 0; i < L; i++) {
+			  
 			 A = H.removemin();
-			 
+			
 			 if (debug) System.out.println(ToString(A));
 			 if (isValid(A, k)){
 				int [] Delta = ToDelta(A, k);
@@ -185,6 +202,7 @@ public class LSH_functions {
 			 if (isValid(C,k))
 			 	H.insert(C); 
 			 if(debug) H.print();
+			 if (H.size <= 1) break; 
 		}
 		return out;  
 	}

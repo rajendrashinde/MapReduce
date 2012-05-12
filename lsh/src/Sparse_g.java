@@ -41,7 +41,7 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
 		DATA, QUERY_MAX, QUERY	
 	};
 	
-	static boolean debug = false;
+	static boolean debug = true;
   
 	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 		private Text h_bucket = new Text();
@@ -176,8 +176,12 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
 							junk.add(point_id); 
 							lsh_table.put(h_bucket, junk);
 						}   
+						
+						System.out.println(data_count);
 					 }
 				    
+					System.out.println("Data indexed: " + data_count); 
+					
 					if (point_type.equals("query") && data_count > 0){
 						reporter.incrCounter(ReducerLoad.QUERY, 1);
 						String query_str = result[0];
@@ -228,24 +232,34 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
 		}
 	}
 	
-	public static class IdentityReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+	public static class LBReduce extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException { 
+			int data_count = 0; int query_count = 0; 
 			while (values.hasNext()) {
 				String line = values.next().toString();
 				String[] result = line.split("; ");
+				String point_str = result[0];
 				String point_type = result[1];
+				String point_ID = result[2];
 				   
-				Text junk = new Text (); 
-				  //  System.out.println(h_bucket + " :" + result[1] + ": " + result[2]); 
+				//Text junk = new Text (); 
 				if (point_type.equals("data")){
-					junk.set(result[2] + ", data");  
+					reporter.incrCounter(ReducerLoad.DATA, 1);
+					data_count += 1; 
+					//junk.set(result[2] + ", data");  
 				}
 				if (point_type.equals("query")) {
-					junk.set(result[2] + ", query"); 
+					reporter.incrCounter(ReducerLoad.QUERY, 1);
+					query_count += 1; 
+					//junk.set(result[2] + ", query"); 
 				}
 				
-				output.collect(key, junk);
+				
+				//output.collect(key, junk);
 			}
+			Text dc = new Text (); dc.set("Data points: " + data_count); 
+			Text qc = new Text (); qc.set("Query points: " + query_count); 
+			output.collect(dc, qc);
 		}
 	}
 
@@ -260,40 +274,42 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
 			conf.setReducerClass(lsh.Sparse_g.Reduce.class);
         conf.setInputFormat(TextInputFormat.class);
         conf.setOutputFormat(TextOutputFormat.class);
-	conf.setLong("mapred.task.timeout", 0L); 
-	int l = args.length; 
-        FileInputFormat.setInputPaths(conf, new Path(args[l-2]) );
-        FileOutputFormat.setOutputPath(conf, new Path(args[l-1]) );
-	if (l == 2) {
-		conf.setJobName("H_job"); 
-		conf.setNumReduceTasks(256);
-	}
+		conf.setLong("mapred.task.timeout", 0L); 
+	
+		int l = args.length; 
+	        FileInputFormat.setInputPaths(conf, new Path(args[l-2]) );
+	        FileOutputFormat.setOutputPath(conf, new Path(args[l-1]) );
+		if (l == 2) {
+			conf.setJobName("G_job"); 
+			conf.setNumReduceTasks(256);
+		}
 
-	if (l == 3) {
-		//conf.setQueueName(args[0]); 
-		conf.set("mapred.child.java.opts", args[0]);
-        	conf.setJobName("H_job");
-	}
-	if (l == 4) {
-		conf.set("mapred.child.java.opts", args[0]);
-		//conf.setQueueName(args[0]); 
-		conf.setNumReduceTasks( Integer.parseInt(args[1]) );
-        	conf.setJobName("H_job");
-	}
-	if (l == 5) {
-		conf.set("mapred.child.java.opts", args[0]);
-		conf.setNumReduceTasks( Integer.parseInt(args[1]) );
-		conf.setJobName(args[2]);
-	}
+		if (l == 3) {
+			//conf.setQueueName(args[0]); 
+			conf.set("mapred.child.java.opts", args[0]);
+	        	conf.setJobName("G_job");
+		}
+		if (l == 4) {
+			conf.set("mapred.child.java.opts", args[0]);
+			//conf.setQueueName(args[0]); 
+			conf.setNumReduceTasks( Integer.parseInt(args[1]) );
+	        	conf.setJobName("H_job");
+		}
+		if (l == 5) {
+			conf.set("mapred.child.java.opts", args[0]);
+			conf.setNumReduceTasks( Integer.parseInt(args[1]) );
+			conf.setJobName(args[2]);
+		}
+		
         RunningJob job = JobClient.runJob(conf); 
-	Counters counters = job.getCounters();
-	for (Counters.Group group : counters) {
+		Counters counters = job.getCounters();
+		for (Counters.Group group : counters) {
     		System.out.println("- Counter Group: " + group.getDisplayName() + " (" + group.getName() + ")");
     		System.out.println("  number of counters in this group: " + group.size());
     		for (Counters.Counter counter : group) {
         		System.out.println("  - " + counter.getDisplayName() + ": " + counter.getCounter());
     		}
-	}
+		}
 
-       }
+    }
 }

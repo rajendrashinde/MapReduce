@@ -8,7 +8,7 @@ import java.util.HashSet;
 public class MinHeap {
     private List<Set<Integer>> Heap;
     private int maxsize;
-    private int size;
+    public int size;
 	private Float [] x; 
 	private Integer [] sorted_order; 
 
@@ -75,6 +75,7 @@ public class MinHeap {
 	}
 	
     public Set<Integer> removemin() {
+
 		swap(1,size);
 		Set<Integer> out = Heap.get(size); 
 		Heap.remove(size);

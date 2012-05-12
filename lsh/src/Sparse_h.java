@@ -31,13 +31,14 @@ import org.apache.hadoop.conf.Configuration;
 
 import org.apache.hadoop.mapred.RunningJob;
 import org.apache.hadoop.mapred.Counters;
-public class Sparse_h {
-      	public static enum MapperLoad {
+public class Sparse_h extends CustomPartitionerSecondarySort {
+
+	public static enum MapperLoad {
 		DATA, QUERY, FANOUT, PERTURB
 	};
 
 	public static enum ReducerLoad {
-		DATA, QUERY	
+		DATA, QUERY_MAX, QUERY	
 	};
 	
 	static boolean debug = false;
@@ -74,7 +75,7 @@ public class Sparse_h {
 				Vector_sparse point = new Vector_sparse(point_str, d);
 
 				
-				h_bucket.set(LSH_functions.hbucket(point, k, W)[0]);
+				h_bucket.set(LSH_functions.hbucket(point, k, W)[0] + " data");
 				if (debug)
 					value_out.set("data; " + point_ID);
 				else
@@ -94,18 +95,18 @@ public class Sparse_h {
 
 				Set<String> f = LSH_functions.GetOffsetBuckets(query, k, L, W);				 
 
+				if (debug)
+					value_out.set("query; " + point_ID);
+				else
+					value_out.set(point_str + "; query; " + point_ID);
+
 				Text key_out  = new Text(); 				
 				Iterator<String> it = f.iterator();
 				if (!f.isEmpty()){ 
 				    while (it.hasNext()){
 						
-						key_out.set(it.next());
-						reporter.incrCounter(MapperLoad.FANOUT, 1); 
-						if (debug)
-							value_out.set("query; " + point_ID);
-						else
-							value_out.set(point_str + "; query; " + point_ID); 
-						
+						key_out.set(it.next() + " query");
+						reporter.incrCounter(MapperLoad.FANOUT, 1); 						
 						output.collect(key_out, value_out);
 				      	//  System.out.println(next.toString() + ": " + point_ID);
 				    }
@@ -126,7 +127,9 @@ public class Sparse_h {
 			      //HashMap<String, HashSet<String>> query_buckets = new HashMap<String, HashSet<String>> ();
 			      HashMap<String, String> query_container = new HashMap<String, String> (); 
 				
-				String h_bucket = key.toString();
+				String key_array[] = key.toString().split(" ");
+				String h_bucket = key_array[0];
+			
 				Parameters P = new Parameters (); double u = P.u; int d = P.d;
 				
 				long t1; long t2; 
@@ -183,25 +186,24 @@ public class Sparse_h {
 				while (it_query.hasNext()){
 					String query_ID = it_query.next();
 					String query_str = query_container.get(query_ID);  
-				   	t1 = System.currentTimeMillis();  
-					
-						System.out.println("Query: " + query_ID); 
+				   	  											
 						if (lsh_table.containsKey(h_bucket)) {
 							
 							//Vector query = new Vector(query_str, mode, d); 
-
 							//normalize if necessary!
 							//query = query.normalize() ; 
 
+							t1 = System.currentTimeMillis();
 							NN = Math_functions.nearest_neighbor(query_str, query_ID, lsh_table.get(h_bucket), u, d);  
 							//NN = Math_functions.nearest_neighbor(query, lsh_table.get(h_bucket), u, d);  
 							String nn_distance = NN[0]; 
+							t2 = System.currentTimeMillis();
 
 							if (!NN[1].equals("-1")){
 								Text query_txt = new Text(); 
 								query_txt.set("Query:" + query_ID);
 								Text id_txt = new Text(); 
-								t2 = System.currentTimeMillis();  
+								 
 								id_txt.set("Data point: " + NN[1] + " in " +  h_bucket + ", Dist = "+ nn_distance + ", Time: " + Long.toString(t2 - t1) );
 
 								output.collect(query_txt, id_txt); 
@@ -210,7 +212,10 @@ public class Sparse_h {
 								//query_container.get(query_str) + " " + NN.id + " " + 
 								//Double.toString(Math_functions.nearest_neighbor(query, lsh_table.get(h_bucket), u, NN)) ); 
 							}   
-						}    
+							System.out.println("Query: " + query_ID + " Time: " + (t2 - t1));
+						}
+						 
+						     
 				} 
 	        }
 	        

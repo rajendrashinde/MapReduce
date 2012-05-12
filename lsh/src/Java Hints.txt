@@ -1,0 +1,5 @@
+int i = Integer.parseInt(String i_str)
+String i_str = Integer.toString(int i)
+
+float i_float = Float.parseFloat(String str_i);
+String str_i = String.valueOf(i_float); 
