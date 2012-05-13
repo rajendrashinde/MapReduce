@@ -185,10 +185,10 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
 							lsh_table.put(h_bucket, junk);
 						}   
 						
-						System.out.println(data_count);
+						//System.out.println(data_count);
 					 }
 				    
-					System.out.println("Data indexed: " + data_count); 
+					//System.out.println("Data indexed: " + data_count); 
 					
 					if (point_type.equals("query") && data_count > 0){
 						reporter.incrCounter(ReducerLoad.QUERY, 1);
@@ -217,6 +217,7 @@ public class Sparse_g extends CustomPartitionerSecondarySort {
 												Text id_txt = new Text(); 								 
 												id_txt.set("Data point: " + NN[1] + " in " +  h_bucket + ", Dist = "+ nn_distance + ", Time: " + Long.toString(t2 - t1) );
 												output.collect(query_txt, id_txt); 
+												break;
 											}   
 											System.out.println("Query: " + query_ID + " Time: " + (t2 - t1));
 										}
