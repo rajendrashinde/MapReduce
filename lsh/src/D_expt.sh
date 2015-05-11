@@ -30,6 +30,6 @@ perl -ne 'for (split(" ", $_)) { $H{$_} = 1 } END { print scalar(keys%H), "\n" }
 fi
 
 #rm -f twitter.txt
-#hadoop fs -copyToLocal $output /data/ashish-students/hdfsoutputs
+#hadoop fs -copyToLocal $output $OUTDIR/ghdfsoutputs
 #hadoop fs -rmr $output
 done

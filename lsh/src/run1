@@ -14,5 +14,5 @@ output="output_${scheme}_k${k}_L${L}_c${c}_d${d}_n${n}_q${q}"
 echo $output
 hadoop fs -rmr $output
 /usr/local/hadoop-0.20.2/bin/hadoop jar ./lsh.jar lsh.LSH_${scheme} -Xmx300m 64 input $output
-#hadoop fs -copyToLocal $output /data/ashish-students/hdfsoutputs/
+#hadoop fs -copyToLocal $output $OUTDIR/ghdfsoutputs/
 #hadoop fs -rmr $output

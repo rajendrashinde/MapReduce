@@ -8,10 +8,10 @@ job_g=output_g
 echo $output_h
 hadoop fs -rmr $output_h
 /usr/local/hadoop-0.20.2/bin/hadoop jar ./lsh.jar lsh.LSH_h -Xmx300m 64 job_h input $output_h
-hadoop fs -copyToLocal $output_h /data/ashish-students/hdfsoutputs/
+hadoop fs -copyToLocal $output_h $OUTDIR/ghdfsoutputs/
 hadoop fs -rmr $output_h
 echo $output_g
 /usr/local/hadoop-0.20.2/bin/hadoop jar ./lsh.jar lsh.LSH_g -Xmx300m 64 job_g input $output_g
-hadoop fs -copyToLocal $output_g /data/ashish-students/hdfsoutputs/
+hadoop fs -copyToLocal $output_g $OUTDIR/ghdfsoutputs/
 hadoop fs -rmr $output_g
 

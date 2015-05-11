@@ -3,7 +3,6 @@ Hadoop job: job_201110312213_0434
 =====================================
 Job tracker host name: ilc0
 job tracker start time: Mon Oct 31 22:13:20 PDT 2011
-User: ashish-students
 JobName: G_L200_D3.0
 JobConf: hdfs://ilc0:54310/data/hadoop/tmp/mapred/system/job_201110312213_0434/job.xml
 Submitted At: 29-Nov-2011 03:11:01

@@ -15,6 +15,6 @@ echo $job
 echo $output
 hadoop fs -rmr $output
 /usr/local/hadoop-0.20.2/bin/hadoop jar ./lsh.jar lsh.LSH_${scheme_l} -Xmx512m 64 $job $dataset $output
-hadoop fs -copyToLocal $output /data/ashish-students/hdfsoutputs
+hadoop fs -copyToLocal $output $OUTDIR/ghdfsoutputs
 hadoop fs -rmr $output
 done

@@ -15,7 +15,7 @@ echo $job
 echo $output
 hadoop fs -rmr $output
 /usr/local/hadoop-0.20.2/bin/hadoop jar ./lsh.jar lsh.LSH_${scheme_l} -Xmx512m 64 $job $dataset $output > job.txt
-#hadoop fs -copyToLocal $output /data/ashish-students/hdfsoutputs
+#hadoop fs -copyToLocal $output $OUTDIR/ghdfsoutputs
 
 echo $scheme $dataset $D $L > twitter.txt
 cat job.txt | grep "Reduce shuffle bytes" >> twitter.txt
